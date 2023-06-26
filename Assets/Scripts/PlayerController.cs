@@ -25,6 +25,16 @@ public class PlayerController : MonoBehaviour
         transform.Rotate(0f, mouseX, 0f);
 
         float forwardMovement = Input.GetAxis("Vertical");
+
+        if (Input.GetKeyDown(KeyCode.LeftArrow))
+        {
+            transform.rotation = Quaternion.Euler(0f, -90f, 0f); // Rotate the player's forward direction 90 degrees to the left
+        }
+        else if (Input.GetKeyDown(KeyCode.RightArrow))
+        {
+            transform.rotation = Quaternion.Euler(0f, 90f, 0f); // Rotate the player's forward direction 90 degrees to the right
+        }
+
         Vector3 movement = transform.forward * speed * forwardMovement * Time.deltaTime;
 
         // Move the character controller
