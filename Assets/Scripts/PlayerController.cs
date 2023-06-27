@@ -1,12 +1,13 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
+    public Camera mainCamera;
     public Animator animator;
-    public float speed;
+    public float speed = 3f;
+    private float mouseX, mouseY;
+    private float sensitivity = 2f;
+
     private CharacterController characterController;
 
     private void Awake()
@@ -14,36 +15,32 @@ public class PlayerController : MonoBehaviour
         characterController = GetComponent<CharacterController>();
     }
 
-    private void Update()
+    void Update()
     {
-        HandleMovement();
+        Movement();
+        Rotation();
     }
 
-    private void HandleMovement()
+    private void Rotation()
     {
-        float mouseX = Input.GetAxis("Mouse X");
-        transform.Rotate(0f, mouseX, 0f);
-
-        float forwardMovement = Input.GetAxis("Vertical");
-
-        if (Input.GetKeyDown(KeyCode.LeftArrow))
-        {
-            transform.rotation = Quaternion.Euler(0f, -90f, 0f); // Rotate the player's forward direction 90 degrees to the left
-        }
-        else if (Input.GetKeyDown(KeyCode.RightArrow))
-        {
-            transform.rotation = Quaternion.Euler(0f, 90f, 0f); // Rotate the player's forward direction 90 degrees to the right
-        }
-
-        Vector3 movement = transform.forward * speed * forwardMovement * Time.deltaTime;
-
-        // Move the character controller
-        characterController.Move(movement);
-
-        // Set the animation speed based on the absolute value of the forward movement input
-        animator.SetFloat("Speed", Mathf.Abs(forwardMovement));
-
+         mouseX += Input.GetAxis("Mouse X") * sensitivity;
+         mouseY -= Input.GetAxis("Mouse Y") * sensitivity;
+        transform.eulerAngles = new Vector3(0f, mouseX, 0f);
+        mainCamera.transform.localRotation = Quaternion.Euler(mouseY, 0f, 0f);
     }
 
 
+    private void Movement()
+    {
+        Vector3 move = new Vector3(0, 0, Input.GetAxisRaw("Vertical"));
+        move = this.transform.TransformDirection(move) * speed;
+
+        characterController.Move(move * Time.deltaTime);
+
+        float movement = move.magnitude;
+        Debug.Log("value" + movement);
+        animator.SetFloat("Speed", Mathf.Abs(movement));
+    }
+
+    
 }
