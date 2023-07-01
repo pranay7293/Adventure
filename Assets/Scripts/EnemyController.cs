@@ -1,7 +1,5 @@
-using System.Collections;
-using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
-using UnityEngine.AI;
 
 public enum EnemyType
 {
@@ -15,19 +13,21 @@ public class EnemyController : MonoBehaviour
 {
     [SerializeField]
     private EnemyType enemyType;
+    [SerializeField]
+    private Animator animator;
+    [SerializeField]
+    private Rigidbody enemyrb;    
+    [SerializeField]
+    private GameObject playerObject;
+    [SerializeField]
+    private Transform playerTransform;
+    [SerializeField]
+    private TMP_Text textMeshPro;
+    [SerializeField]
+    private float health = 100f;
+    [SerializeField]
+    private Gradient healthGradient;
 
-    [SerializeField]
-    public Animator animator;
-    [SerializeField]
-    public NavMeshAgent agent;
-    [SerializeField]
-    public GameObject playerObject;
-    [SerializeField]
-    public Transform playerTransform;
-    [SerializeField]
-    public LayerMask whatIsGround, whatIsPlayer;
-    [SerializeField]
-    public float health;
 
     [SerializeField]
     private Vector3 centerPoint;
@@ -35,47 +35,54 @@ public class EnemyController : MonoBehaviour
     private float sightRange;
     [SerializeField]
     private float attackRange;
+    [SerializeField]
+    private float speed = 0.1f;
 
     //Patroling
     private Vector3 walkPoint;
-    bool walkPointSet;
+    private bool walkPointSet;
 
     //Attacking
-    public float timeBetweenAttacks;
-    bool alreadyAttacked;
+    public float timeBetweenAttacks;    
     public GameObject projectile;
 
     //States
-    public bool playerInSightRange = false;
-    public bool playerInAttackRange = false;
+    private bool alreadyAttacked = false;
+    private bool playerInSightRange = false;
+    private bool playerInAttackRange = false;
 
+    private void Start()
+    {
+        UpdateHealth();
+    }
 
     private void Awake()
     {
         playerTransform = playerObject.transform;
-        agent = GetComponent<NavMeshAgent>();
+        enemyrb = GetComponent<Rigidbody>();
     }
+      
 
     private void Update()
     {
-        // Check for sight and attack range
-        playerInSightRange = Physics.CheckSphere(centerPoint, sightRange, whatIsPlayer);
-        playerInAttackRange = Physics.CheckSphere(transform.position, attackRange, whatIsPlayer);
+        playerInSightRange = Vector3.Distance(centerPoint, playerTransform.position) <= sightRange;
+        playerInAttackRange = Vector3.Distance(transform.position, playerTransform.position) <= attackRange;
 
         if (!playerInSightRange && !playerInAttackRange)
         {
-            
+            animator.SetTrigger("IsWalking");
             Patroling();
         }
         else if (playerInSightRange && !playerInAttackRange)
         {
+            animator.SetTrigger("IsWalking");
             ChasePlayer();
         }
         else if (playerInAttackRange && playerInSightRange)
         {
             AttackPlayer();
         }
-    }
+    }    
 
     private void Patroling()
     {
@@ -85,65 +92,80 @@ public class EnemyController : MonoBehaviour
         }
         else
         {
-            if (agent.remainingDistance <= agent.stoppingDistance)
+            if (Vector3.Distance(transform.position, walkPoint) <= 1f)
             {
                 walkPointSet = false;
+            }
+            else
+            {
+                Vector3 direction1 = (walkPoint - transform.position).normalized;
+                enemyrb.MovePosition(transform.position + direction1 * speed);
+
+                if (direction1 != Vector3.zero)
+                {
+                    Quaternion targetRotation1 = Quaternion.LookRotation(direction1, Vector3.up);
+                    enemyrb.MoveRotation(targetRotation1);
+                }
+
             }
         }
     }
 
     private void SearchWalkPoint()
     {
-        animator.SetTrigger("IsWalking");
-        Vector3 randomDirection = Random.insideUnitSphere * sightRange;
-        randomDirection += centerPoint;
-
-        NavMeshHit hit;
-        if (NavMesh.SamplePosition(randomDirection, out hit, 2f, NavMesh.AllAreas))
-        {
-            walkPoint = hit.position;
-            walkPointSet = true;
-            agent.SetDestination(walkPoint);
-        }
+        Vector2 randomPoint = Random.insideUnitCircle * sightRange;
+        walkPoint = centerPoint + new Vector3(randomPoint.x, 0f, randomPoint.y);
+        walkPointSet = true;
     }
 
     private void ChasePlayer()
     {
-        animator.SetTrigger("IsWalking");
         if (Vector3.Distance(centerPoint, playerTransform.position) <= sightRange)
         {
-            Vector3 targetPosition = centerPoint + (playerTransform.position - centerPoint).normalized * sightRange;
-            agent.SetDestination(targetPosition);
+            Vector3 direction2 = (playerTransform.position - transform.position).normalized;
+            enemyrb.MovePosition(transform.position + direction2 * speed);
+
+            if (direction2 != Vector3.zero)
+            {
+                Quaternion targetRotation2 = Quaternion.LookRotation(direction2, Vector3.up);
+                enemyrb.MoveRotation(targetRotation2);
+            }
         }
         else
         {
-            agent.SetDestination(centerPoint);
+            Vector3 direction3 = (centerPoint - transform.position).normalized;
+            enemyrb.MovePosition(transform.position + direction3 * speed);
+            if (direction3 != Vector3.zero)
+            {
+                Quaternion targetRotation3 = Quaternion.LookRotation(direction3, Vector3.up);
+                enemyrb.MoveRotation(targetRotation3);
+            }
         }
     }
 
     private void AttackPlayer()
     {
         // Make sure the enemy doesn't move
-        agent.SetDestination(transform.position);
-
+        enemyrb.velocity = Vector3.zero;
+        enemyrb.angularVelocity = Vector3.zero;
         transform.LookAt(playerTransform);
+
 
         if (!alreadyAttacked)
         {
             animator.SetTrigger("Attack");
             // Attack code here
             GameObject projectileObject = Instantiate(projectile, transform.position, Quaternion.identity);
-            Rigidbody rb = projectileObject.GetComponent<Rigidbody>();
-            rb.AddForce(transform.forward * 32f, ForceMode.Impulse);
-            rb.AddForce(transform.up * 8f, ForceMode.Impulse);
+            Rigidbody projectileRb = projectileObject.GetComponent<Rigidbody>();
+            projectileRb.AddForce(transform.forward * 32f, ForceMode.Impulse);
+            projectileRb.AddForce(transform.up * 8f, ForceMode.Impulse);
             // End of attack code
 
-            Destroy(projectileObject, 5f);
+            Destroy(projectileObject, 3f);
             alreadyAttacked = true;
             Invoke(nameof(ResetAttack), timeBetweenAttacks);
         }
     }
-
 
     private void ResetAttack()
     {
@@ -152,13 +174,33 @@ public class EnemyController : MonoBehaviour
 
     public void TakeDamage(int damage)
     {
-        health -= damage;
-
-        if (health <= 0) Invoke(nameof(DestroyEnemy), 0.5f);
+        if (damage >= health)
+        {
+            health = 0;
+            UpdateHealth();
+            animator.SetTrigger("Die");
+            Invoke(nameof(DestroyEnemy), 3f);
+        }
+        else
+        {
+            health -= damage;
+            UpdateHealth();
+            animator.SetTrigger("GetHit");
+        }
     }
+    
+    private void UpdateHealth()
+    {
+        float healthPercentage = health / 100f;
+        Color currentColor = healthGradient.Evaluate(healthPercentage);
+        Debug.Log("healthpersentage" + healthPercentage);
+        textMeshPro.text = health.ToString("F0");
+        textMeshPro.color = currentColor;
+    }
+
     private void DestroyEnemy()
     {
-        Destroy(gameObject);
+        this.gameObject.SetActive(false);
     }
 
     private void OnDrawGizmosSelected()
@@ -167,5 +209,10 @@ public class EnemyController : MonoBehaviour
         Gizmos.DrawWireSphere(transform.position, attackRange);
         Gizmos.color = Color.yellow;
         Gizmos.DrawWireSphere(centerPoint, sightRange);
+    }
+
+    public EnemyType GetEnemyType()
+    {
+        return enemyType;
     }
 }
