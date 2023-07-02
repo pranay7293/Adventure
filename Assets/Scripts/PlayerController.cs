@@ -12,6 +12,8 @@ public class PlayerController : MonoBehaviour
     private GameObject HandCup;
 
     public Camera mainCamera;
+    private float BottomClamp = -15f;
+    private float TopClamp = 30f;
     public Animator animator;
     public float speed = 3f;
     private float mouseX, mouseY;
@@ -24,7 +26,8 @@ public class PlayerController : MonoBehaviour
     public Slider healthBarSlider;
     public EnemyController enemyController;
     public GameManager gameManager;
-
+    [SerializeField]
+    private Rigidbody playerrb;
 
     public bool isgamePaused = false;
     public int enemycount;
@@ -32,15 +35,10 @@ public class PlayerController : MonoBehaviour
 
     private void Awake()
     {
+        playerrb = GetComponent<Rigidbody>();
         characterController = GetComponent<CharacterController>();
     }
-<<<<<<< Updated upstream
 
-    void Update()
-    {
-        Movement();
-        Rotation();
-=======
     private void Start()
     {
         currentHealth = maxHealth;
@@ -55,41 +53,28 @@ public class PlayerController : MonoBehaviour
         }
         CameraRotation();
         enemycount = EnemyController.GetAliveEnemyCount();
->>>>>>> Stashed changes
     }
 
-    private void Rotation()
+    public void CameraRotation()
     {
-         mouseX += Input.GetAxis("Mouse X") * sensitivity;
-         mouseY -= Input.GetAxis("Mouse Y") * sensitivity;
-        transform.eulerAngles = new Vector3(0f, mouseX, 0f);
-        mainCamera.transform.localRotation = Quaternion.Euler(mouseY, 0f, 0f);
-    }
+        mouseX += Input.GetAxis("Mouse X") * sensitivity;
+        mouseY -= Input.GetAxis("Mouse Y") * sensitivity;
 
+        mouseX = (mouseX + 360f) % 360f;
+        mouseY = Mathf.Clamp(mouseY, BottomClamp, TopClamp);
+
+        mainCamera.transform.localRotation = Quaternion.Euler(mouseY, 0f, 0f);
+        transform.rotation = Quaternion.Euler(0f, mouseX, 0f);
+    }
 
     private void Movement()
     {
-<<<<<<< Updated upstream
-        Vector3 move = new Vector3(0, 0, Input.GetAxisRaw("Vertical"));
-        move = this.transform.TransformDirection(move) * speed;
-
-        characterController.Move(move * Time.deltaTime);
-
-        float movement = move.magnitude;
-        Debug.Log("value" + movement);
-        animator.SetFloat("Speed", Mathf.Abs(movement));
-    }
-
-    
-=======
+        Debug.Log("Movement called");
         float vertical = Input.GetAxis("Vertical"); // Use "VerticalWASD" input axis for forward/backward movement
         float horizontal = Input.GetAxis("Horizontal"); // Use "HorizontalWASD" input axis for left/right movement
-        if (Mathf.Abs(vertical) > 0)
-        {
-            animator.SetBool("PistolAim", false);
-            animator.SetFloat("Speed", Mathf.Abs(vertical)); 
-        }
+
         Vector3 movement = transform.forward * vertical * speed * Time.deltaTime;
+        animator.SetFloat("Speed", Mathf.Abs(vertical));
         playerrb.MovePosition(transform.position + movement);
 
         if (vertical != 0 || horizontal != 0)
@@ -185,5 +170,4 @@ public class PlayerController : MonoBehaviour
         healthBarSlider.value = currentHealth;
     }
 
->>>>>>> Stashed changes
 }
