@@ -6,10 +6,6 @@ TagManager:
   tags:
   - Ground
   - Enemy
-  - BlueProjectile
-  - YellowProjectile
-  - MinoProjectile
-  - LevelComplete
   layers:
   - Default
   - TransparentFX
