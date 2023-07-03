@@ -3765,7 +3765,6 @@ GameObject:
   - component: {fileID: 1000222338}
   - component: {fileID: 713965896}
   - component: {fileID: 8512015971779030646}
-  - component: {fileID: 4783930273809422430}
   m_Layer: 6
   m_Name: AsunaMaster
   m_TagString: Player
@@ -3829,9 +3828,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fed24b0716ae4394f981d1fa1818ffb2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  LeveltextMesh: {fileID: 0}
+  GoldCup: {fileID: 0}
+  HandCup: {fileID: 0}
   mainCamera: {fileID: 8404950718003709575}
   animator: {fileID: 1463708364774580849}
   speed: 3
+  maxHealth: 100
+  healthBarSlider: {fileID: 0}
+  enemyController: {fileID: 0}
+  gameManager: {fileID: 0}
+  playerrb: {fileID: 0}
+  isgamePaused: 0
+  enemycount: 0
 --- !u!114 &713965896
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3862,24 +3871,6 @@ Rigidbody:
   m_Interpolate: 1
   m_Constraints: 0
   m_CollisionDetection: 2
---- !u!143 &4783930273809422430
-CharacterController:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5331100293346468529}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Height: 2
-  m_Radius: 0.5
-  m_SlopeLimit: 45
-  m_StepOffset: 0.3
-  m_SkinWidth: 0.08
-  m_MinMoveDistance: 0.001
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &5361441132201648479
 GameObject:
   m_ObjectHideFlags: 0
