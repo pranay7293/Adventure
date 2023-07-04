@@ -9,13 +9,15 @@ public class ShootingCtrl : MonoBehaviour
     [SerializeField]
     private GameObject HandPistol;
     [SerializeField]
-    private GameObject SocketPistol;
-
-    public Camera mainCamera;
-    public GameObject aimCameraPosition;
-    public GameObject mainCameraPosition;
-    public Image crossHair;
-
+    private GameObject SocketPistol;   
+    [SerializeField]
+    private Camera mainCamera;
+    [SerializeField]
+    private Transform aimCameraPosition;
+    [SerializeField]
+    private Transform mainCameraPosition;   
+    [SerializeField]
+    private Image crossHair;
     [SerializeField]
     private GameObject bulletPrefab;
     [SerializeField]
@@ -24,33 +26,39 @@ public class ShootingCtrl : MonoBehaviour
     private float bulletspeed = 500f;
     [SerializeField]
     private Rigidbody bulletrb;
-    public bool isAim = false;
+   
+    
 
+    private bool isAim = false;    
+    public bool isGame = false;
     
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Mouse1))
+       if (!isGame)
         {
-            if (isAim)
+            if (Input.GetKeyDown(KeyCode.Mouse1))
             {
-                mainCamera.transform.position = mainCameraPosition.transform.position;
-                animator.SetBool("PistolAim", false);
-                CloseShootMode();
+                if (isAim)
+                {
+                    mainCamera.transform.position = mainCameraPosition.position;
+                    animator.SetBool("PistolAim", false);
+                    CloseShootMode();
+                }
+                else
+                {
+                    mainCamera.transform.position = aimCameraPosition.position;
+                    GetIntoShootMode();
+                }
             }
-            else
+            if (Input.GetKeyDown(KeyCode.Mouse0) && isAim)
             {
-                mainCamera.transform.position = aimCameraPosition.transform.position;
-                GetIntoShootMode();
+                animator.SetBool("PistolAim", true);
+                Shoot();
             }
         }
-        if(Input.GetKeyDown(KeyCode.Mouse0) && isAim)
-        {
-            animator.SetBool("PistolAim", true);
-            Shoot();
-        }
-
     }
 
+   
     private void GetIntoShootMode()
     {
         isAim = true;
@@ -121,5 +129,6 @@ public class ShootingCtrl : MonoBehaviour
             }
 
         }
-    }
+    }    
+
 }

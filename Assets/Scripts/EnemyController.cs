@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-using UnityEngine.AI;
-
 public enum EnemyType
 {
     BlackSpider,
@@ -25,16 +23,13 @@ public class EnemyController : MonoBehaviour
     [SerializeField]
     private Transform playerTransform;
     [SerializeField]
-    private TMP_Text textMeshPro;
-    [SerializeField]
-    private float health = 100f;   
+    private TMP_Text textMeshPro;    
     [SerializeField]
     private Gradient healthGradient;
     [SerializeField]
     private float pivotOffset;
     [SerializeField]
     private float spawnDistance;
-
     [SerializeField]
     private Vector3 centerPoint;
     [SerializeField]
@@ -43,23 +38,23 @@ public class EnemyController : MonoBehaviour
     private float attackRange;
     [SerializeField]
     private float speed;
+    [SerializeField]
+    private float timeBetweenAttacks;
+    [SerializeField]
+    private GameObject projectile;
+    
 
-    //Patroling
-    private Vector3 walkPoint;
-    bool walkPointSet;
-
-    //Attacking
-    public float timeBetweenAttacks;
-    bool alreadyAttacked;
-    public GameObject projectile;
+    private Vector3 walkPoint;    
     private static List<EnemyController> aliveEnemies = new List<EnemyController>();
 
-    //States
-    public bool playerInSightRange = false;
-    public bool playerInAttackRange = false;
+    private float health = 100f;
+    private bool walkPointSet;
+    private bool playerInSightRange = false;
+    private bool playerInAttackRange = false;
+    private bool alreadyAttacked;
+    public bool isGameDone = false;
 
 
-   
     private void Awake()
     {
         playerTransform = playerObject.transform;
@@ -74,33 +69,39 @@ public class EnemyController : MonoBehaviour
 
     private void Update()
     {
-        playerInSightRange = Vector3.Distance(centerPoint, playerTransform.position) <= sightRange;
-        playerInAttackRange = Vector3.Distance(transform.position, playerTransform.position) <= attackRange;
+        if (!isGameDone)
+        {
 
-        if (!playerInSightRange && !playerInAttackRange)
-        {
-            animator.SetTrigger("IsWalking");
-            Patroling();
-        }
-        else if (playerInSightRange && !playerInAttackRange)
-        {
-            animator.SetTrigger("IsWalking");
-            ChasePlayer();
-        }
-        else if (playerInAttackRange && playerInSightRange)
-        {
-            AttackPlayer();
-        }
+            playerInSightRange = Vector3.Distance(centerPoint, playerTransform.position) <= sightRange;
+            playerInAttackRange = Vector3.Distance(transform.position, playerTransform.position) <= attackRange;
+
+            if (!playerInSightRange && !playerInAttackRange)
+            {
+                animator.SetTrigger("IsWalking");
+                Patroling();
+            }
+            else if (playerInSightRange && !playerInAttackRange)
+            {
+                animator.SetTrigger("IsWalking");
+                ChasePlayer();
+            }
+            else if (playerInAttackRange && playerInSightRange)
+            {
+                AttackPlayer();
+            }
+        }        
     }
 
     private void OnDisable()
     {
-        aliveEnemies.Remove(this);
+        aliveEnemies.Remove(this); 
     }
     public static int GetAliveEnemyCount()
     {
         return aliveEnemies.Count;
     }
+
+   
     private void Patroling()
     {
         if (!walkPointSet)
@@ -117,13 +118,10 @@ public class EnemyController : MonoBehaviour
             {
                 Vector3 direction1 = (walkPoint - transform.position).normalized;
                 enemyrb.MovePosition(transform.position + direction1 * speed);
-
-                if (direction1 != Vector3.zero)
-                {
+                if (direction1 != Vector3.zero)                {
                     Quaternion targetRotation1 = Quaternion.LookRotation(direction1, Vector3.up);
                     enemyrb.MoveRotation(targetRotation1);
                 }
-
             }
         }
     }
@@ -163,21 +161,16 @@ public class EnemyController : MonoBehaviour
 
     private void AttackPlayer()
     {
-        // Make sure the enemy doesn't move
         enemyrb.velocity = Vector3.zero;
         enemyrb.angularVelocity = Vector3.zero;
         transform.LookAt(playerTransform);
 
-
         if (!alreadyAttacked)
         {
             animator.SetTrigger("Attack");
-            // Attack code here
             GameObject projectileObject = Instantiate(projectile, transform.position, Quaternion.identity);
             Rigidbody projectileRb = projectileObject.GetComponent<Rigidbody>();
-            projectileRb.AddForce(transform.forward * 32f, ForceMode.Impulse);
-            projectileRb.AddForce(transform.up * 8f, ForceMode.Impulse);
-            // End of attack code
+            projectileRb.AddForce(transform.forward * 2f, ForceMode.Impulse);
 
             Destroy(projectileObject, 3f);
             alreadyAttacked = true;
@@ -199,7 +192,7 @@ public class EnemyController : MonoBehaviour
             UpdateHealth();
             EnemyDeathSfx();
             animator.SetTrigger("Die");
-            Invoke(nameof(DestroyEnemy), 3f);
+            Invoke(nameof(DisableEnemy), 3f);
         }
         else
         {
@@ -218,19 +211,11 @@ public class EnemyController : MonoBehaviour
         textMeshPro.color = currentColor;
     }      
     
-    private void DestroyEnemy()
+    private void DisableEnemy()
 
     {       
         this.gameObject.SetActive(false);       
-    }
-
-    private void OnDrawGizmosSelected()
-    {
-        Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(transform.position, attackRange);
-        Gizmos.color = Color.yellow;
-        Gizmos.DrawWireSphere(centerPoint, sightRange);
-    }
+    }   
 
     private void EnemyAttackSfx()
     {
@@ -306,6 +291,13 @@ public class EnemyController : MonoBehaviour
     public EnemyType GetEnemyType()
     {
         return enemyType;
+    }
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(transform.position, attackRange);
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawWireSphere(centerPoint, sightRange);
     }
 
 }
