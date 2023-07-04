@@ -10,39 +10,43 @@ public class PlayerController : MonoBehaviour
     private GameObject GoldCup;
     [SerializeField]
     private GameObject HandCup;
-
-    public Camera mainCamera;
-    private float BottomClamp = -15f;
-    private float TopClamp = 30f;
-    public Animator animator;
-    public float speed = 3f;
-    private float mouseX, mouseY;
-    private float sensitivity = 2f;
-
-    private CharacterController characterController;
-
-    public int maxHealth = 100;
-    private int currentHealth;
-    public Slider healthBarSlider;
-    public EnemyController enemyController;
-    public GameManager gameManager;
+    [SerializeField]
+    private Camera mainCamera;
     [SerializeField]
     private Rigidbody playerrb;
+    [SerializeField]
+    private Animator animator;
+    [SerializeField]
+    private float speed = 5f;
+    [SerializeField]
+    private Slider healthBarSlider;
+    [SerializeField]
+    private  ShootingCtrl shootingCtrl;
+    [SerializeField]
+    private GameManager gameManager;
+    [SerializeField]
+    private TextMeshProUGUI playerHealth;
+    [SerializeField]
+    private TextMeshProUGUI EnemiesAlive;
+
+    private float BottomClamp = -10f;
+    private float TopClamp = 20f;
+    private float mouseX, mouseY;
+    private float sensitivity = 2f;
+    private float maxHealth = 100;
+    private float currentHealth;
 
     public bool isgamePaused = false;
     public int enemycount;
 
-
     private void Awake()
     {
         playerrb = GetComponent<Rigidbody>();
-        characterController = GetComponent<CharacterController>();
     }
 
     private void Start()
     {
-        currentHealth = maxHealth;
-        UpdateHealthBar();
+        currentHealth = maxHealth;   
     }
 
     void Update()
@@ -52,7 +56,8 @@ public class PlayerController : MonoBehaviour
             Movement();            
         }
         CameraRotation();
-        enemycount = EnemyController.GetAliveEnemyCount();
+        EnemiesAliveUI();
+        UpdateHealthBar();
     }
 
     public void CameraRotation()
@@ -69,11 +74,14 @@ public class PlayerController : MonoBehaviour
 
     private void Movement()
     {
-        Debug.Log("Movement called");
-        float vertical = Input.GetAxis("Vertical"); // Use "VerticalWASD" input axis for forward/backward movement
-        float horizontal = Input.GetAxis("Horizontal"); // Use "HorizontalWASD" input axis for left/right movement
+        float vertical = Input.GetAxis("Vertical"); 
+        float horizontal = Input.GetAxis("Horizontal");
 
         Vector3 movement = transform.forward * vertical * speed * Time.deltaTime;
+        if(Mathf.Abs(vertical) > 0.2)
+        {
+            animator.SetBool("PistolAim", false);           
+        }
         animator.SetFloat("Speed", Mathf.Abs(vertical));
         playerrb.MovePosition(transform.position + movement);
 
@@ -86,29 +94,38 @@ public class PlayerController : MonoBehaviour
     }
 
     private void OnTriggerEnter(Collider collision)
-    {     
-        int playerdamage;
-        switch (collision.tag)
+    {
+        if (!isgamePaused)
         {
-            case "BlueProjectile":
-                playerdamage = Random.Range(5, 8 + 1);
-                TakeDamage(playerdamage);
-                break;
-            case "YellowProjectile":
-                playerdamage = Random.Range(10, 12 + 1);
-                TakeDamage(playerdamage);
-                break;
-            case "MinoProjectile":
-                playerdamage = Random.Range(20, 25 + 1);
-                TakeDamage(playerdamage);
-                break;
-            case "LevelComplete":
-                LevelComplete();
-                break;
+            float playerdamage;
+            switch (collision.tag)
+            {
+                case "BlueProjectile":
+                    playerdamage = Random.Range(5, 8 + 1);
+                    TakeDamage(playerdamage);
+                    break;
+                case "YellowProjectile":
+                    playerdamage = Random.Range(10, 12 + 1);
+                    TakeDamage(playerdamage);
+                    break;
+                case "MinoProjectile":
+                    playerdamage = Random.Range(20, 25 + 1);
+                    TakeDamage(playerdamage);
+                    break;
+                case "LevelComplete":
+                    LevelComplete();
+                    break;
 
-            default:
-                break;
-        }        
+                default:
+                    break;
+            }
+        }
+        
+    }
+    public void EnemiesAliveUI()
+    {
+        enemycount = EnemyController.GetAliveEnemyCount();
+        EnemiesAlive.text = "Enemies Alive: " + enemycount.ToString();
     }
 
     public void LevelComplete()
@@ -122,7 +139,9 @@ public class PlayerController : MonoBehaviour
             HandCup.gameObject.SetActive(true);
             animator.SetTrigger("Victory");
             SoundManager.Instance.PlaySound(Sounds.PlayerWin);
-            Invoke(nameof(YouWin), 3f);
+            isgamePaused = true;
+            shootingCtrl.isGame = true;
+            Invoke(nameof(YouWin), 5f);
         }
         else
         {
@@ -132,42 +151,44 @@ public class PlayerController : MonoBehaviour
             SoundManager.Instance.PlaySound(Sounds.Error);
             animator.SetTrigger("No");
         }
-
     }    
 
-    public void TakeDamage(int damageAmount)
+    public void TakeDamage(float damageAmount)
     {
-        if (damageAmount >= currentHealth)
+        currentHealth -= damageAmount;
+        if (currentHealth <= 0)
         {
             currentHealth = 0;
-            SoundManager.Instance.PlaySound(Sounds.PlayerDie);
-            animator.SetTrigger("Die");            
-            Invoke(nameof(GameLost), 3f);
+            animator.SetTrigger("Die");
+            SoundManager.Instance.PlaySound(Sounds.PlayerDie);            
+            isgamePaused = true;
+            shootingCtrl.isGame = true;
+            Invoke(nameof(GameLost), 5f);
         }
         else
-        {
-            currentHealth -= damageAmount;
-            SoundManager.Instance.PlaySound(Sounds.PlayerHit);
-            animator.SetTrigger("GetHit");
-            UpdateHealthBar();
+        { if(damageAmount >= 5)
+            {                
+                SoundManager.Instance.PlaySound(Sounds.PlayerHit);
+                animator.SetTrigger("GetHit");
+            }    
         }
+        UpdateHealthBar();
     }
 
     private void GameLost()
     {
         gameManager.GameOver();
-
     }
 
     private void YouWin()
     {
         gameManager.PlayerWin();
-
     }
 
     private void UpdateHealthBar()
     {
         healthBarSlider.value = currentHealth;
+        playerHealth.text = currentHealth.ToString("F1"); ;
     }
 
 }

@@ -19,6 +19,7 @@ public class GameManager : MonoBehaviour
     public GameObject playerWinDisplay;
 
     public PlayerController playerController;
+    public EnemyController enemyController;
 
     private void Awake()
     {
@@ -35,6 +36,7 @@ public class GameManager : MonoBehaviour
         SoundManager.Instance.PlaySound(Sounds.Pause);
         pauseDisplay.SetActive(true);
         playerController.isgamePaused = true;
+        enemyController.isGameDone = true;
         Time.timeScale = 0f;
     }
 
@@ -70,7 +72,6 @@ public class GameManager : MonoBehaviour
     {
         playerWinDisplay.SetActive(true);
         SoundManager.Instance.PlaySound(Sounds.Celebrate);
-
     }
 
 }
