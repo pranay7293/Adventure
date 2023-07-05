@@ -4,9 +4,11 @@
 ### Theme:
 ##### In a world flooded with relentless adversaries, you must navigate the perilous landscape of Survival Adventure. As a courageous explorer, you are surrounded by a haunting blue light that steadily drains your health. Dodge enemies, strategically manage your limited vitality, and strive to survive in this challenging adventure where the true enemy is not the darkness, but the encroaching radiance.
 
+[Play Game](https://pranay7293.itch.io/survival-adventure)
+
 ### Key Features and Highlights
 - Games' third-person perspective camera will act as an AIM camera in shoot mode.
-- Player horizontal Rotation is synchronized with mouse horizontal input and the player can rotate in 360 degrees.
+- Player horizontal Rotation is synchronized with mouse horizontal input and the player can rotate 360 degrees.
 - Player can move forward and backward in any direction as per rotation set by mouse input.
 - Blue Light Zone will fall on the Player at random time intervals.
 - Player has to move out of Blue Light Zone and
