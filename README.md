@@ -4,13 +4,24 @@
 ### Theme:
 ##### In a world flooded with relentless adversaries, you must navigate the perilous landscape of Survival Adventure. As a courageous explorer, you are surrounded by a haunting blue light that steadily drains your health. Dodge enemies, strategically manage your limited vitality, and strive to survive in this challenging adventure where the true enemy is not the darkness, but the encroaching radiance.
 
+### Key Features and Highlights
+- Games' third-person perspective camera will act as an AIM camera in shoot mode.
+- Player horizontal Rotation is synchronized with mouse horizontal input and the player can rotate in 360 degrees.
+- Player can move forward and backward in any direction as per rotation set by mouse input.
+- Blue Light Zone will fall on the Player at random time intervals.
+- Player has to move out of Blue Light Zone and
+- Blue Light Zone is fixed to the player's initial position and doesn't follow the player.
+- If the player reaches the Level completion point while enemies are alive, it will suggest killing all the enemies.
+- On Level Completion, the Player will get Golden Cup. The Big Golden Cup turns small to fit in the Player's Hand. 
+
+
 ### Player Character
 ##### Basic Game Play Controls
 - Will move forward and backward along with vertical input. ⬆️ ⬇️
 - Will rotate along with horizontal mouse input. 🖱 
-- Will be in Idle when there is no input.
 - On Mouse Right Click, the player will enter into shoot mode. Aim Crosshair will be enabled.
-- With Mouse Left Click, the player can start shooting the enemies. But it works only in shoot mode. 
+- With Mouse Left Click, the player can start shooting the enemies. But it works only in shoot mode.
+- Will be in Idle when there is no input.
 
 ##### Health || Damage || Game Over
 - Player health initially set to full (100).
