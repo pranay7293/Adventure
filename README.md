@@ -25,6 +25,7 @@
 - Will rotate along with horizontal mouse input. 🖱 
 - On Mouse Right Click, the player will enter into shoot mode. Aim Crosshair will be enabled.
 - With Mouse Left Click, the player can start shooting the enemies. But it works only in shoot mode.
+- Reach the Golden Cup at the opposite end of the player spawn location. to Win the Game.
 - Will be in Idle when there is no input.
 
 ##### Health || Damage || Game Over
