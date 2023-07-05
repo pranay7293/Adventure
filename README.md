@@ -54,8 +54,10 @@
 - **Exit:** will load the Lobby page.
 
 ## Lobby: 
+![alt text](Assets/2DArt/BGStart.png)
 
-![alt text]((https://github.com/pranay7293/Adventure/blob/main/Assets/2D%20Art/BGStart.png)https://github.com/pranay7293/Adventure/blob/main/Assets/2D%20Art/BGStart.png)
 ## Player Win: 
-
 ![alt text](Assets/2DArt/BGWIN.png)
+
+## GameOver:
+![alt text](Assets/2DArt/BGGameOver.png)
