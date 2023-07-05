@@ -5,10 +5,12 @@
 ##### In a world flooded with relentless adversaries, you must navigate the perilous landscape of Survival Adventure. As a courageous explorer, you are surrounded by a haunting blue light that steadily drains your health. Dodge enemies, strategically manage your limited vitality, and strive to survive in this challenging adventure where the true enemy is not the darkness, but the encroaching radiance.
 
 ### Player Character
-##### Movement
-- Will move forward and backward along with vertical input.
-- Will rotate along with horizontal mouse input.
+##### Basic Game Play Controls
+- Will move forward and backward along with vertical input. ⬆️ ⬇️
+- Will rotate along with horizontal mouse input. 🖱 
 - Will be in Idle when there is no input.
+- On Mouse Right Click, the player will enter into shoot mode. Aim Crosshair will be enabled.
+- With Mouse Left Click, the player can start shooting the enemies. But it works only in shoot mode. 
 
 ##### Health || Damage || Game Over
 - Player health initially set to full (100).
@@ -17,7 +19,7 @@
 - Player has to avoid the  Blue Light Zone and Enemies attacks to avoid health loss.
 - Player will lose the game on zero health and Game Over
 
-##### Attack and Game Win
+##### Attack || Game Win
 - Player will attack enemies with Pistol Gun.
 - Bullets will be fired to shoot the enemies and cause damage to enemies.
 - Bullets will cause different amounts of damage to different types of enemies.
