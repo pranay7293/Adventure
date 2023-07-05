@@ -59,5 +59,5 @@
 ## Player Win: 
 ![alt text](Assets/2DArt/BGWIN.png)
 
-## GameOver:
+## Game Over:
 ![alt text](Assets/2DArt/BGGameOver.png)
