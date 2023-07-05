@@ -55,7 +55,7 @@
 
 ## Lobby: 
 
-![alt text](Assets/2D Art/BGStart.png)
+![alt text]([Assets/2D Art/BGStart.png](https://github.com/pranay7293/Adventure/blob/main/Assets/2D%20Art/BGStart.png)https://github.com/pranay7293/Adventure/blob/main/Assets/2D%20Art/BGStart.png)
 ## Player Win: 
 
 ![alt text](Assets/2D Art/BGWIN.png)
