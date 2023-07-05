@@ -36,20 +36,20 @@
 
 ### Menu and UI options:
 ##### Lobby
-**Play:** To start the Game Play.
-**Music Icon:** Will enable and disable Background music.
-**Speaker Icon:** Will enable and disable Game Sounds.
+- **Play:** To start the Game Play.
+- **Music Icon:** Will enable and disable Background music.
+- **Speaker Icon:** Will enable and disable Game Sounds.
 
 ##### Gameplay UI
-**Player Healthbar:** Indicates Player Health with a slider and numerically. 
-**Enemies Alive:** Indicates Enemies Alive in the Game World. 
-**Pause:** will affect gameplay to pause and the player will get options to Resume and Exit.
-**Resume:** will resume the gameplay from where it is Paused.
-**Exit:** will load the Lobby page.
-**On GameOver:** Player will get Reply and Exit options.
-**Reply:** Replay the game.
-**Exit:** will load the Lobby page.
-**On YouWin:** Player will get Reply and Exit options.
-**Reply:** Replay the game.
-**Exit:** will load the Lobby page.
+- **Player Healthbar:** Indicates Player Health with a slider and numerically.
+- **Enemies Alive:** Indicates Enemies Alive in the Game World.
+- **Pause:** will affect gameplay to pause and the player will get options to Resume and Exit.
+- **Resume:** will resume the gameplay from where it is Paused.
+- **Exit:** will load the Lobby page.
+- **On GameOver:** Player will get Reply and Exit options.
+- **Reply:** Replay the game.
+- **Exit:** will load the Lobby page.
+- **On YouWin:** Player will get Reply and Exit options.
+- **Reply:** Replay the game.
+- **Exit:** will load the Lobby page.
   
