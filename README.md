@@ -4,7 +4,8 @@
 ### Theme:
 ##### In a world flooded with relentless adversaries, you must navigate the perilous landscape of Survival Adventure. As a courageous explorer, you are surrounded by a haunting blue light that steadily drains your health. Dodge enemies, strategically manage your limited vitality, and strive to survive in this challenging adventure where the true enemy is not the darkness, but the encroaching radiance.
 
-[Play Game](https://pranay7293.itch.io/survival-adventure)
+[Click here to Play the Game](https://pranay7293.itch.io/survival-adventure)
+[Click here to Watch the Gameplay](https://youtu.be/6l_MpogWFeo)
 
 ### Key Features and Highlights
 - Games' third-person perspective camera will act as an AIM camera in shoot mode.
