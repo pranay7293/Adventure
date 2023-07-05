@@ -52,4 +52,9 @@
 - **On YouWin:** Player will get Reply and Exit options.
 - **Reply:** Replay the game.
 - **Exit:** will load the Lobby page.
+
+## Lobby: 
+![Alt Text](Assets/2D Art/BGStart.png)
+## Player Win: 
+![Alt Text](Assets/2D Art/BGWIN.png)
   
