@@ -54,7 +54,8 @@
 - **Exit:** will load the Lobby page.
 
 ## Lobby: 
-![Alt Text](Assets/2D Art/BGStart.png)
+
+![alt text](Assets/2D Art/BGStart.png)
 ## Player Win: 
-![Alt Text](Assets/2D Art/BGWIN.png)
-  
+
+![alt text](Assets/2D Art/BGWIN.png)
