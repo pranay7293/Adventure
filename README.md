@@ -11,7 +11,7 @@
 - Player horizontal Rotation is synchronized with mouse horizontal input and the player can rotate 360 degrees.
 - Player can move forward and backward in any direction as per rotation set by mouse input.
 - Blue Light Zone will fall on the Player at random time intervals.
-- Player has to move out of Blue Light Zone and
+- Player has to move out of Blue Light Zone
 - Blue Light Zone is fixed to the player's initial position and doesn't follow the player.
 - If the player reaches the Level completion point while enemies are alive, it will suggest killing all the enemies.
 - On Level Completion, the Player will get Golden Cup. The Big Golden Cup turns small to fit in the Player's Hand. 
